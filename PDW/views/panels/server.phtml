@@ -1,0 +1,48 @@
+<div id='pdw-panel-server' class='pdw-panel server'>
+	<div class='title'>
+		<h2>Server Info <a class='pdw-panel-close'>&times;</a></h2>
+	</div>
+	<div class='panel-content'>
+		<h3 class='collapser'>$_SERVER</h3>
+		<table class='pdw-data-table'>
+			<thead>
+				<tr>
+					<th>Key</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php
+				foreach($_SERVER as $k=>$v):
+					echo "<tr>";
+						echo "<td>{$k}</td>";
+						echo "<td>{$v}</td>";
+					echo "</tr>";
+				endforeach;
+			?>
+			</tbody>
+		</table>
+
+		<h3 class='collapser'>Response Headers</h3>
+		<table class='pdw-data-table'>
+			<thead>
+				<tr>
+					<th>Key</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php
+				$headers = headers_list();
+				$headers = !$headers? array() : $headers;
+				foreach($headers as $k=>$v):
+					echo "<tr>";
+						echo "<td>{$k}</td>";
+						echo "<td>{$v}</td>";
+					echo "</tr>";
+				endforeach;
+			?>
+			</tbody>
+		</table>
+	</div>
+</div>

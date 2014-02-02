@@ -1,0 +1,57 @@
+<?php
+	$profiles = $debugWidget->getProfiler()->getProfiles();
+	$profiles = !$profiles? array() : $profiles;
+	$db = $debugWidget->getDI()->get('db');
+	$descriptors = $db->getDescriptor();
+?>
+<div id='pdw-panel-db' class='pdw-panel db'>
+	<div class='title'>
+		<h2>Database Info <a class='pdw-panel-close'>&times;</a></h2>
+	</div>
+	<div class='panel-content'>
+		<h3 class='collapser'>SQL Queries</h3>
+		<table class='pdw-data-table'>
+			<thead>
+				<tr>
+					<th>Query</th>
+					<th style="width: 100px">Time (s)</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php
+				$total = 0;
+				foreach ($profiles as $profile):
+					$time = $profile->getTotalElapsedSeconds();
+					$total += $time;
+					echo "<tr>";
+						echo "<td><pre><code class='language-sql'>" . $profile->getSQLStatement() . "</code></pre></td>";
+						echo "<td>" . round($time, 6) . "</td>";
+					echo "</tr>";
+				endforeach;
+			?>
+			<tr>
+				<td><strong>Total:</strong></td>
+				<td><strong><?php echo round($total, 6); ?></strong></td>
+			</tr>
+			</tbody>
+		</table>
+
+		<h3 class='collapser'>DB Server</h3>
+		<table class='pdw-data-table'>
+			<tbody>
+			<tr>
+				<td>Type</td>
+				<td><?php echo $db->getType(); ?></td>
+			</tr>
+			<?php
+				foreach($descriptors as $k=>$v):
+					echo "<tr>";
+						echo "<td>{$k}</td>";
+						echo "<td>{$v}</td>";
+					echo "</tr>";
+				endforeach;
+			?>
+			</tbody>
+		</table>
+	</div>
+</div>

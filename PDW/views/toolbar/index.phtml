@@ -1,0 +1,64 @@
+<div class="pdw-wrap">
+	<a id='pdw-icon'></a>
+	<div id='pdw-toolbar'>
+		<ul id='pdw-main-nav'>
+			<li>
+				<a href='#server'>
+					Server<br />
+					<small>Phalcon: <?php echo \Phalcon\Version::get(); ?></small>
+				</a>
+			</li>
+			<li>
+				<a href='#request'>
+					Request
+				</a>
+			</li>
+			<li>
+				<a href='#views'>
+					Views<br />
+					<small><?php echo count($debugWidget->getRenderedViews()); ?> rendered</small>
+				</a>
+			</li>
+			<li>
+				<a href='#db'>
+					Database<br />
+					<small><?php echo $debugWidget->getQueryCount(); ?> queries</small>
+				</a>
+			</li>
+		</ul>
+		<?php
+			$panels = array('server', 'request', 'views', 'db');
+			foreach ($panels as $panel) {
+				$this->partial("panels/{$panel}");
+			}
+		?>
+
+	<div id='pdw-resources'>
+		<h3 class='title'>Resource Usage</h3>
+		<table>
+			<tbody>
+				<tr>
+					<td>load time</td>
+					<td><?php echo round(($debugWidget->getEndTime() - $debugWidget->getStartTime()), 6); ?> s</td>
+				</tr>
+				<tr>
+					<td>elapsed time</td>
+					<td><?php echo round(($debugWidget->getEndTime() - $_SERVER['REQUEST_TIME'] ), 6); ?> s</td>
+				</tr>
+				<tr>
+					<td>mem</td>
+					<td><?php echo number_format(memory_get_usage()/1024, 2); ?> KB</td>
+				</tr>
+				<tr>
+					<td>mem peak</td>
+					<td><?php echo number_format(memory_get_peak_usage()/1024, 2); ?> KB</td>
+				</tr>
+				<tr>
+					<td>session size</td>
+					<td><?php printf('%0.3F KB' ,mb_strlen(serialize($_SESSION))/1024); ?></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	</div>
+</div>

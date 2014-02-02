@@ -1,0 +1,28 @@
+<?php
+$views = $debugWidget->getRenderedViews();
+?>
+<div id='pdw-panel-views' class='pdw-panel views'>
+	<div class='title'>
+		<h2>View Info <a class='pdw-panel-close'>&times;</a></h2>
+	</div>
+	<div class='panel-content'>
+		<?php foreach($views as $rendered): ?>
+		<h3 class='collapser'><?php echo pathinfo($rendered['path'], PATHINFO_BASENAME); ?></h3>
+		<table class='pdw-data-table'>
+			<tbody>
+			<?php
+				foreach($rendered as $k=>$v):
+					$class = ($k == 'params')? "language-php" : "";
+					echo "<tr>";
+						echo "<td style='width: 125px;'>{$k}</td>";
+						echo "<td><pre><code class='{$class}'>";
+							print_r($v);
+						echo "</code></pre></td>";
+					echo "</tr>";
+				endforeach;
+			?>
+			</tbody>
+		</table>
+		<?php endforeach; ?>
+	</div>
+</div>
