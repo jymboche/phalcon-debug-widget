@@ -33,7 +33,7 @@ if (PHALCONDEBUG == true) {
 
 ## Preview
 
-![](/preview.png])
+![](/preview.png)
 
 ## Attribution:
 
