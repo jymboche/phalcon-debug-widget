@@ -24,7 +24,7 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 		$this->_profiler = new Profiler();
 
 		$eventsManager = $di->get('eventsManager');
-		$whitelist = ['db', 'dispatcher', 'view'];
+		$whitelist = array('db', 'dispatcher', 'view');
 
 		foreach ($di->getServices() as $service) {
 			$name = $service->getName();
@@ -76,7 +76,8 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 			} elseif(is_array($v)) {
 				$array = array();
 				foreach ($v as $key=>$value) {
-					$array[$key] = (string)$value;
+					if(is_object($value) === false)
+						$array[$key] = (string)$value;
 				}
 				$params[$k] = $array;
 			} else {
