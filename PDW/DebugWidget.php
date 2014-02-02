@@ -76,8 +76,7 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 			} elseif(is_array($v)) {
 				$array = array();
 				foreach ($v as $key=>$value) {
-					if(is_object($value) === false)
-						$array[$key] = (string)$value;
+					$array[$key] = is_object($value)? get_class($value) : (string)$value;
 				}
 				$params[$k] = $array;
 			} else {
