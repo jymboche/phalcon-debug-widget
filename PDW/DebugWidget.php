@@ -16,25 +16,37 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 	private $queryCount = 0;
 	protected $_profiler;
 	protected $_viewsRendered = array();
+        protected $_serviceNames = array();
 
-	public function __construct($di)
-	{
+	public function __construct(
+		$di,
+		$serviceNames =
+			array(
+				'db' => array('db'),
+				'dispatch' => array('dispatcher'),
+				'view' => array('view')
+			)
+	) {
 		$this->_di = $di;
 		$this->startTime = microtime(true);
 		$this->_profiler = new Profiler();
 
 		$eventsManager = $di->get('eventsManager');
-		$whitelist = array('db', 'dispatcher', 'view');
 
 		foreach ($di->getServices() as $service) {
 			$name = $service->getName();
-			$eventName = ($name == 'dispatcher')? 'dispatch' : $name;
-			if (in_array($name, $whitelist)) {
-				$service->setShared(true);
-				$di->get($name)->setEventsManager($eventsManager);
-				$eventsManager->attach($eventName, $this);
+			foreach ($serviceNames as $eventName => $services) {
+				if (in_array($name, $services)) {
+					$service->setShared(true);
+					$di->get($name)->setEventsManager($eventsManager);
+                                        break;
+				}
 			}
 		}
+		foreach (array_keys($serviceNames) as $eventName) {
+			$eventsManager->attach($eventName, $this);
+		}
+		$this->_serviceNames = $serviceNames;
 	}
 
 	public function setDI($di)
@@ -47,9 +59,14 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 		return $this->_di;
 	}
 
+	public function getServices($event)
+	{
+		return $this->_serviceNames[$event];
+	}
+
 	public function beforeQuery($event, $connection)
 	{
-		$this->_profiler->startProfile($connection->getSQLStatement());
+		$this->_profiler->startProfile($connection->getRealSQLStatement());
 	}
 
 	public function afterQuery($event, $connection)
@@ -76,7 +93,7 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 			} elseif(is_array($v)) {
 				$array = array();
 				foreach ($v as $key=>$value) {
-					$array[$key] = is_object($value)? get_class($value) : (string)$value;
+					$array[$key] = is_object($value)? get_class($value) : print_r($value, true);
 				}
 				$params[$k] = $array;
 			} else {
@@ -99,7 +116,6 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 		$content = $view->getContent();
 		$scripts = $this->getInsertScripts();
 		$scripts .= "</head>";
-
 		$content = str_replace("</head>", $scripts, $content);
 		$rendered = $this->renderToolbar();
 		$rendered .= "</body>";
