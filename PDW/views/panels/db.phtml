@@ -1,8 +1,6 @@
 <?php
 	$profiles = $debugWidget->getProfiler()->getProfiles();
 	$profiles = !$profiles? array() : $profiles;
-	$db = $debugWidget->getDI()->get('db');
-	$descriptors = $db->getDescriptor();
 ?>
 <div id='pdw-panel-db' class='pdw-panel db'>
 	<div class='title'>
@@ -35,7 +33,12 @@
 			</tr>
 			</tbody>
 		</table>
-
+<?php
+        $dbs = $debugWidget->getServices('db');
+        foreach ($dbs as $dbName) {
+                $db = $debugWidget->getDI()->get($dbName);
+                $descriptors = $db->getDescriptor();
+?>
 		<h3 class='collapser'>DB Server</h3>
 		<table class='pdw-data-table'>
 			<tbody>
@@ -53,5 +56,8 @@
 			?>
 			</tbody>
 		</table>
+<?php
+}
+?>
 	</div>
 </div>
