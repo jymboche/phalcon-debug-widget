@@ -54,8 +54,12 @@
 					<td><?php echo number_format(memory_get_peak_usage()/1024, 2); ?> KB</td>
 				</tr>
 				<tr>
-					<td>session size</td>
-					<td><?php printf('%0.3F KB' ,mb_strlen(serialize($_SESSION))/1024); ?></td>
+                   <td>session size</td>
+                    <?php if(isset($_SESSION)):?>
+					    <td><?php printf('%0.3F KB' ,mb_strlen(serialize($_SESSION))/1024); ?></td>
+                    <?php else:?>
+                        <td>0</td>
+                    <?php endif?>
 				</tr>
 			</tbody>
 		</table>
