@@ -66,7 +66,11 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 
 	public function beforeQuery($event, $connection)
 	{
-		$this->_profiler->startProfile($connection->getRealSQLStatement());
+		$this->_profiler->startProfile(
+			$connection->getRealSQLStatement(),
+			$connection->getSQLVariables(),
+			$connection->getSQLBindTypes()
+		);
 	}
 
 	public function afterQuery($event, $connection)
