@@ -23,6 +23,7 @@
 					$total += $time;
 					echo "<tr>";
 						echo "<td><pre><code class='language-sql'>" . $profile->getSQLStatement() . "</code></pre></td>";
+						echo "<td><pre>" . print_r($profile->getSQLVariables(), true) . "</pre></td>";
 						echo "<td>" . round($time, 6) . "</td>";
 					echo "</tr>";
 				endforeach;
