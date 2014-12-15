@@ -34,12 +34,12 @@
 			</tr>
 			</tbody>
 		</table>
-<?php
-        $dbs = $debugWidget->getServices('db');
-        foreach ($dbs as $dbName) {
-                $db = $debugWidget->getDI()->get($dbName);
-                $descriptors = $db->getDescriptor();
-?>
+		<?php
+			$dbs = $debugWidget->getServices('db');
+			foreach ($dbs as $dbName) {
+				$db = $debugWidget->getDI()->get($dbName);
+				$descriptors = $db->getDescriptor();
+		?>
 		<h3 class='collapser'>DB Server</h3>
 		<table class='pdw-data-table'>
 			<tbody>
