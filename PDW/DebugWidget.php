@@ -5,9 +5,10 @@ namespace PDW;
 use Phalcon\Db\Profiler as Profiler,
 	Phalcon\Escaper as Escaper,
 	Phalcon\Mvc\Url as URL,
-	Phalcon\Mvc\View as View;
+	Phalcon\Mvc\View as View,
+	Phalcon\DI\InjectionAwareInterface;
 
-class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
+class DebugWidget implements InjectionAwareInterface
 {
 
 	protected $_di;
@@ -16,7 +17,7 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 	private $queryCount = 0;
 	protected $_profiler;
 	protected $_viewsRendered = array();
-        protected $_serviceNames = array();
+	protected $_serviceNames = array();
 
 	public function __construct(
 		$di,
@@ -35,17 +36,21 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 
 		foreach ($di->getServices() as $service) {
 			$name = $service->getName();
+
 			foreach ($serviceNames as $eventName => $services) {
 				if (in_array($name, $services)) {
 					$service->setShared(true);
 					$di->get($name)->setEventsManager($eventsManager);
-                                        break;
+
+					break;
 				}
 			}
 		}
+
 		foreach (array_keys($serviceNames) as $eventName) {
 			$eventsManager->attach($eventName, $this);
 		}
+
 		$this->_serviceNames = $serviceNames;
 	}
 
@@ -82,9 +87,9 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 	/**
 	 * Gets/Saves information about views and stores truncated viewParams.
 	 *
-	 * @param unknown $event
-	 * @param unknown $view
-	 * @param unknown $file
+	 * @param $event
+	 * @param $view
+	 * @param $file
 	 */
 	public function beforeRenderView($event,$view,$file)
 	{
@@ -96,6 +101,7 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 				$params[$k] = get_class($v);
 			} elseif(is_array($v)) {
 				$array = array();
+
 				foreach ($v as $key=>$value) {
 					if (is_object($value)) {
 						$array[$key] = get_class($value);
@@ -105,6 +111,7 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 						$array[$key] = $value;
 					}
 				}
+
 				$params[$k] = $array;
 			} else {
 				$params[$k] = (string)$v;
@@ -158,6 +165,7 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 				'/pdw-assets/lib/prism/prism.js',
 				'/pdw-assets/pdw.js'
 		);
+
 		foreach ($js as $src) {
 			$link = $url->get($src);
 			$link = str_replace("//", "/", $link);

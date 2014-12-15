@@ -13,7 +13,7 @@
 			</thead>
 			<tbody>
 			<?php
-            if(isset($_SESSION)){
+			if(isset($_SESSION)){
 				foreach($_SESSION as $k=>$v):
 					$class = is_array($v)? "language-php" : "";
 					echo "<tr>";
@@ -23,7 +23,7 @@
 						echo "</code></pre></td>";
 					echo "</tr>";
 				endforeach;
-            }
+			}
 			?>
 			</tbody>
 		</table>
