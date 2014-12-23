@@ -51,7 +51,10 @@
 				foreach($descriptors as $k=>$v):
 					echo "<tr>";
 						echo "<td>{$k}</td>";
-						echo "<td>{$v}</td>";
+						if (is_string($v)) {
+							echo "<td>{$v}</td>";
+						}
+						echo "<td>&nbsp;</td>";
 					echo "</tr>";
 				endforeach;
 			?>
