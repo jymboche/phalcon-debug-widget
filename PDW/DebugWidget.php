@@ -2,7 +2,8 @@
 
 namespace PDW;
 
-use Phalcon\Db\Profiler as Profiler,
+use Phalcon\DiInterface,
+	Phalcon\Db\Profiler as Profiler,
 	Phalcon\Escaper as Escaper,
 	Phalcon\Mvc\Url as URL,
 	Phalcon\Mvc\View as View;
@@ -49,7 +50,7 @@ class DebugWidget implements \Phalcon\DI\InjectionAwareInterface
 		$this->_serviceNames = $serviceNames;
 	}
 
-	public function setDI($di)
+	public function setDI(DiInterface $di)
 	{
 		$this->_di = $di;
 	}
